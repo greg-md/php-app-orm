@@ -12,6 +12,10 @@ class OrmServiceProvider implements ServiceProvider
 {
     private const CONFIG_NAME = 'orm';
 
+    private const RESOURCE_DB_PATH = 'db';
+
+    private const PHINX_CONFIG_NAME = 'phinx.php';
+
     private $app;
 
     public function name()
@@ -47,7 +51,7 @@ class OrmServiceProvider implements ServiceProvider
                 });
             }
 
-            if ($defaultDriver = $this->config('default_driver') ?? null) {
+            if ($defaultDriver = $this->config('default_driver')) {
                 $manager->setDefaultDriverName($defaultDriver);
             }
 
@@ -58,11 +62,19 @@ class OrmServiceProvider implements ServiceProvider
     public function install()
     {
         $this->app()->fire('app.config.add', __DIR__ . '/../config/config.php', self::CONFIG_NAME);
+
+        $this->app()->fire('app.resource.add', __DIR__ . '/../resources/db', self::RESOURCE_DB_PATH);
+
+        $this->app()->fire('app.root.add', __DIR__ . '/../phinx.php', self::PHINX_CONFIG_NAME);
     }
 
     public function uninstall()
     {
         $this->app()->fire('app.config.remove', self::CONFIG_NAME);
+
+        $this->app()->fire('app.resource.remove', self::RESOURCE_DB_PATH);
+
+        $this->app()->fire('app.root.remove', self::PHINX_CONFIG_NAME);
     }
 
     private function config(string $name)

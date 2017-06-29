@@ -12,7 +12,8 @@
   "require": {
     "php": "^7.1",
     "greg-md/php-app-installer": "dev-master",
-    "greg-md/php-orm": "dev-master"
+    "greg-md/php-orm": "dev-master",
+    "robmorgan/phinx": "^0.8.1"
   },
   "require-dev": {
     "phpunit/phpunit": "6.2.*",
