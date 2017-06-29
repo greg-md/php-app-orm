@@ -1,0 +1,31 @@
+{
+  "name": "greg-md/php-app-orm",
+  "type": "library",
+  "description": "Integration of Greg PHP ORM in Greg PHP Application.",
+  "keywords": [ "greg-md", "greg-php", "php-app-orm", "greg-app-orm", "app-orm", "cache", "php", "web-artisans" ],
+  "homepage": "https://github.com/greg-md/php-app-orm",
+  "license": "MIT",
+  "authors": [
+    { "name": "Grigorii Duca", "email": "contact@greg.md", "homepage": "http://greg.md/" }
+  ],
+  "minimum-stability": "dev",
+  "require": {
+    "php": "^7.1",
+    "greg-md/php-app-installer": "dev-master",
+    "greg-md/php-orm": "dev-master"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "6.2.*",
+    "symfony/var-dumper": "^3.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Greg\\AppOrm\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Greg\\AppOrm\\": "tests/"
+    }
+  }
+}
