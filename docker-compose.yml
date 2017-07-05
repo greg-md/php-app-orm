@@ -1,0 +1,13 @@
+version: '3'
+services:
+  mysql:
+    image: percona:5.7
+    env_file: .env
+    networks:
+      app:
+        aliases:
+          - mysql.app.local
+    ports:
+      - "3306:3306"
+networks:
+  app:

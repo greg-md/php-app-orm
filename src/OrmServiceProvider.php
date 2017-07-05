@@ -2,6 +2,7 @@
 
 namespace Greg\AppOrm;
 
+use Greg\AppInstaller\Events\BuildDeploy\RunAddEvent;
 use Greg\Framework\Application;
 use Greg\Framework\ServiceProvider;
 use Greg\Orm\Driver\DriverManager;
@@ -15,6 +16,8 @@ class OrmServiceProvider implements ServiceProvider
     private const RESOURCE_DB_PATH = 'db';
 
     private const PHINX_CONFIG_NAME = 'phinx.php';
+
+    private const BUILD_DEPLOY_RUN_NAME= '010-migration.sh';
 
     private $app;
 
@@ -66,6 +69,8 @@ class OrmServiceProvider implements ServiceProvider
         $this->app()->fire('app.resource.add', __DIR__ . '/../resources/db', self::RESOURCE_DB_PATH);
 
         $this->app()->fire('app.root.add', __DIR__ . '/../phinx.php', self::PHINX_CONFIG_NAME);
+
+        $this->app()->event(new RunAddEvent(__DIR__ . '/../build-deploy/run.sh', self::BUILD_DEPLOY_RUN_NAME));
     }
 
     public function uninstall()
@@ -75,6 +80,8 @@ class OrmServiceProvider implements ServiceProvider
         $this->app()->fire('app.resource.remove', self::RESOURCE_DB_PATH);
 
         $this->app()->fire('app.root.remove', self::PHINX_CONFIG_NAME);
+
+        $this->app()->fire('app.build-deploy.run.remove', self::BUILD_DEPLOY_RUN_NAME);
     }
 
     private function config(string $name)
