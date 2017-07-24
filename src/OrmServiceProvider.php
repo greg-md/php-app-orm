@@ -2,6 +2,7 @@
 
 namespace Greg\AppOrm;
 
+use Greg\AppInstaller\Application;
 use Greg\AppInstaller\Events\BuildDeployRunAddEvent;
 use Greg\AppInstaller\Events\BuildDeployRunRemoveEvent;
 use Greg\AppInstaller\Events\ConfigAddEvent;
@@ -10,7 +11,6 @@ use Greg\AppInstaller\Events\ResourceAddEvent;
 use Greg\AppInstaller\Events\ResourceRemoveEvent;
 use Greg\AppInstaller\Events\RootAddEvent;
 use Greg\AppInstaller\Events\RootRemoveEvent;
-use Greg\Framework\Application;
 use Greg\Framework\ServiceProvider;
 use Greg\Orm\Driver\DriverManager;
 use Greg\Orm\Driver\MysqlDriver;
