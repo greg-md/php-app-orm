@@ -2,7 +2,14 @@
 
 namespace Greg\AppOrm;
 
-use Greg\AppInstaller\Events\BuildDeploy\RunAddEvent;
+use Greg\AppInstaller\Events\BuildDeployRunAddEvent;
+use Greg\AppInstaller\Events\BuildDeployRunRemoveEvent;
+use Greg\AppInstaller\Events\ConfigAddEvent;
+use Greg\AppInstaller\Events\ConfigRemoveEvent;
+use Greg\AppInstaller\Events\ResourceAddEvent;
+use Greg\AppInstaller\Events\ResourceRemoveEvent;
+use Greg\AppInstaller\Events\RootAddEvent;
+use Greg\AppInstaller\Events\RootRemoveEvent;
 use Greg\Framework\Application;
 use Greg\Framework\ServiceProvider;
 use Greg\Orm\Driver\DriverManager;
@@ -62,26 +69,26 @@ class OrmServiceProvider implements ServiceProvider
         });
     }
 
-    public function install()
+    public function install(Application $app)
     {
-        $this->app()->fire('app.config.add', __DIR__ . '/../config/config.php', self::CONFIG_NAME);
+        $app->event(new ConfigAddEvent(__DIR__ . '/../config/config.php', self::CONFIG_NAME));
 
-        $this->app()->fire('app.resource.add', __DIR__ . '/../resources/db', self::RESOURCE_DB_PATH);
+        $app->event(new ResourceAddEvent(__DIR__ . '/../resources/db', self::RESOURCE_DB_PATH));
 
-        $this->app()->fire('app.root.add', __DIR__ . '/../phinx.php', self::PHINX_CONFIG_NAME);
+        $app->event(new RootAddEvent(__DIR__ . '/../phinx.php', self::PHINX_CONFIG_NAME));
 
-        $this->app()->event(new RunAddEvent(__DIR__ . '/../build-deploy/run.sh', self::BUILD_DEPLOY_RUN_NAME));
+        $app->event(new BuildDeployRunAddEvent(__DIR__ . '/../build-deploy/run.sh', self::BUILD_DEPLOY_RUN_NAME));
     }
 
-    public function uninstall()
+    public function uninstall(Application $app)
     {
-        $this->app()->fire('app.config.remove', self::CONFIG_NAME);
+        $app->event(new ConfigRemoveEvent(self::CONFIG_NAME));
 
-        $this->app()->fire('app.resource.remove', self::RESOURCE_DB_PATH);
+        $app->event(new ResourceRemoveEvent(self::RESOURCE_DB_PATH));
 
-        $this->app()->fire('app.root.remove', self::PHINX_CONFIG_NAME);
+        $app->event(new RootRemoveEvent(self::PHINX_CONFIG_NAME));
 
-        $this->app()->fire('app.build-deploy.run.remove', self::BUILD_DEPLOY_RUN_NAME);
+        $app->event(new BuildDeployRunRemoveEvent(self::BUILD_DEPLOY_RUN_NAME));
     }
 
     private function config(string $name)
