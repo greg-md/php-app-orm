@@ -24,7 +24,7 @@ class OrmServiceProvider implements ServiceProvider
 
     private const PHINX_CONFIG_NAME = 'phinx.php';
 
-    private const BUILD_DEPLOY_RUN_NAME= '010-migration.sh';
+    private const BUILD_DEPLOY_RUN_NAME = '010-migration.sh';
 
     private $app;
 
