@@ -5,7 +5,7 @@ return [
 
     'drivers' => [
         'base' => [
-            'type' => 'mysql',
+            'type' => \Greg\AppOrm\OrmServiceProvider::TYPE_MYSQL,
 
             'database' => getenv('MYSQL_DATABASE') ?: 'app',
             'host'     => getenv('MYSQL_HOST') ?: '127.0.0.1',

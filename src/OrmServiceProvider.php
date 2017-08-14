@@ -18,6 +18,8 @@ use Greg\Orm\Driver\Pdo;
 
 class OrmServiceProvider implements ServiceProvider
 {
+    const TYPE_MYSQL = 'mysql';
+
     private const CONFIG_NAME = 'orm';
 
     private const RESOURCE_DB_PATH = 'db';
@@ -44,7 +46,7 @@ class OrmServiceProvider implements ServiceProvider
                 $manager->register($name, function () use ($name, $credentials) {
                     $type = $credentials['type'] ?? null;
 
-                    if ($type == 'mysql') {
+                    if ($type == self::TYPE_MYSQL) {
                         return new MysqlDriver(
                             new Pdo(
                                 'mysql:dbname=' . ($credentials['database'] ?? 'app')
