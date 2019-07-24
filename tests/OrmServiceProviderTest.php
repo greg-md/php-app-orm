@@ -4,9 +4,9 @@ namespace Greg\AppOrm;
 
 use Greg\AppInstaller\Application;
 use Greg\Framework\ServiceProvider;
-use Greg\Orm\Driver\DriverManager;
-use Greg\Orm\Driver\DriverStrategy;
-use Greg\Orm\Driver\MysqlDriver;
+use Greg\Orm\Connection\ConnectionManager;
+use Greg\Orm\Connection\ConnectionStrategy;
+use Greg\Orm\Connection\MysqlConnection;
 use Greg\Support\Dir;
 use Greg\Support\File;
 use PHPUnit\Framework\TestCase;
@@ -15,7 +15,7 @@ class OrmServiceProviderTest extends TestCase
 {
     private $rootPath = __DIR__ . '/app';
 
-    protected function setUp()
+    protected function setUp(): void
     {
         Dir::make($this->rootPath);
 
@@ -27,7 +27,7 @@ class OrmServiceProviderTest extends TestCase
         Dir::make($this->rootPath . '/storage');
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         Dir::unlink($this->rootPath);
     }
@@ -52,9 +52,9 @@ class OrmServiceProviderTest extends TestCase
 
         $app = new Application([
             'orm' => [
-                'default_driver' => 'base',
+                'default_connection' => 'base',
 
-                'drivers' => [
+                'connections' => [
                     'base' => [
                         'type' => 'mysql',
 
@@ -75,28 +75,28 @@ class OrmServiceProviderTest extends TestCase
 
         $serviceProvider->boot($app);
 
-        /** @var DriverManager $manager */
-        $manager = $app->get(DriverManager::class);
+        /** @var ConnectionManager $manager */
+        $manager = $app->get(ConnectionManager::class);
 
-        $this->assertInstanceOf(DriverManager::class, $manager);
+        $this->assertInstanceOf(ConnectionManager::class, $manager);
 
-        $this->assertEquals('base', $manager->getDefaultDriverName());
+        $this->assertEquals('base', $manager->getDefaultConnectionName());
 
-        /** @var DriverStrategy $driver */
-        $driver = $manager->driver('base');
+        /** @var ConnectionStrategy $connection */
+        $connection = $manager->connection('base');
 
-        $this->assertInstanceOf(DriverStrategy::class, $driver);
+        $this->assertInstanceOf(ConnectionStrategy::class, $connection);
 
-        $this->assertInstanceOf(MysqlDriver::class, $driver);
+        $this->assertInstanceOf(MysqlConnection::class, $connection);
     }
 
-    public function testCanThrowExceptionIfUndefinedDriver()
+    public function testCanThrowExceptionIfUndefinedConnection()
     {
         $serviceProvider = new OrmServiceProvider();
 
         $app = new Application([
             'orm' => [
-                'drivers' => [
+                'connections' => [
                     'base' => [
                         'type' => 'undefined',
                     ],
@@ -108,10 +108,10 @@ class OrmServiceProviderTest extends TestCase
 
         $serviceProvider->boot($app);
 
-        /** @var DriverManager $manager */
-        $manager = $app->get(DriverManager::class);
+        /** @var ConnectionManager $manager */
+        $manager = $app->get(ConnectionManager::class);
 
-        $manager->driver('base');
+        $manager->connection('base');
     }
 
     public function testCanInstall()

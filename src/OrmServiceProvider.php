@@ -12,9 +12,9 @@ use Greg\AppInstaller\Events\ResourceRemoveEvent;
 use Greg\AppInstaller\Events\RootAddEvent;
 use Greg\AppInstaller\Events\RootRemoveEvent;
 use Greg\Framework\ServiceProvider;
-use Greg\Orm\Driver\DriverManager;
-use Greg\Orm\Driver\MysqlDriver;
-use Greg\Orm\Driver\Pdo;
+use Greg\Orm\Connection\ConnectionManager;
+use Greg\Orm\Connection\MysqlConnection;
+use Greg\Orm\Connection\Pdo;
 
 class OrmServiceProvider implements ServiceProvider
 {
@@ -39,15 +39,15 @@ class OrmServiceProvider implements ServiceProvider
     {
         $this->app = $app;
 
-        $app->inject(DriverManager::class, function () {
-            $manager = new DriverManager();
+        $app->inject(ConnectionManager::class, function () {
+            $manager = new ConnectionManager();
 
-            foreach ((array) $this->config('drivers') as $name => $credentials) {
+            foreach ((array) $this->config('connections') as $name => $credentials) {
                 $manager->register($name, function () use ($name, $credentials) {
                     $type = $credentials['type'] ?? null;
 
                     if ($type == self::TYPE_MYSQL) {
-                        return new MysqlDriver(
+                        return new MysqlConnection(
                             new Pdo(
                                 'mysql:dbname=' . ($credentials['database'] ?? 'app')
                                 . ';host=' . ($credentials['host'] ?? '127.0.0.1')
@@ -63,8 +63,8 @@ class OrmServiceProvider implements ServiceProvider
                 });
             }
 
-            if ($defaultDriver = $this->config('default_driver')) {
-                $manager->setDefaultDriverName($defaultDriver);
+            if ($defaultDriver = $this->config('default_connection')) {
+                $manager->setDefaultConnectionName($defaultDriver);
             }
 
             return $manager;

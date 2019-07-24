@@ -1,9 +1,9 @@
 <?php
 
 return [
-    'default_driver' => 'base',
+    'default_connection' => 'base',
 
-    'drivers' => [
+    'connections' => [
         'base' => [
             'type' => \Greg\AppOrm\OrmServiceProvider::TYPE_MYSQL,
 
